@@ -25,7 +25,7 @@ async function fetchGameData(weekNumber, homeTeam) {
 */
 async function fetchPastGameData() {
   try {
-    const response = await fetch(BACKEND_URL + `/api/games?limit=10&sort=gameDate&order=desc`);
+    const response = await fetch(BACKEND_URL + `/api/games?week=12&limit=10&sort=gameDate&order=desc`);
     
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.statusText}`);
