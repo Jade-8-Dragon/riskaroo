@@ -1,9 +1,7 @@
 const BACKEND_URL = "https://sports-betting-backend-vkc2.onrender.com";
 
 /**
- * Fetches the game data from your backend.
- * This is your reusable function.
- * @returns {Promise<Array|null>} The game data array, or null if an error occurs.
+ * @returns {Promise<Array|null>}
 */
 async function fetchGameData(weekNumber, homeTeam) {
   try {
@@ -23,9 +21,7 @@ async function fetchGameData(weekNumber, homeTeam) {
 }
 
 /**
- * Fetches the game data from your backend.
- * This is your reusable function.
- * @returns {Promise<Array|null>} The game data array, or null if an error occurs.
+ * @returns {Promise<Array|null>}
 */
 async function fetchPastGameData() {
   try {
@@ -78,13 +74,19 @@ function formatGamesAsList(gameData) {
 let balance = 100;
 let current_bet = 0;
 let teamBet = "Colorado";
+const team1 = document.getElementById("team1");
+const team2 = document.getElementById("team2");
 
 function betOutcome() {
   const container = document.getElementById("outcome");
   if (container) {
-    container.textContent = "Congrats! You bet on the winning team! Don't gamble. You won: " + Math.trunc(current_bet * 2.3) + " tokens";
+    if (team2.checked) {
+      container.textContent = "Congrats! You bet on the winning team! Don't gamble. You won: " + Math.trunc(current_bet * 2.3) + " tokens";
+      setBalance(balance + current_bet * 2.3);
+    } else {
+      container.textContent = "Sorry! You bet on the losing team! Don't gamble. You lost: " + current_bet + " tokens";
+    }
   }
-  setBalance(balance + current_bet * 2.3);
 }
 
 function getBalance() {
@@ -100,7 +102,7 @@ function setBalance(number) {
   if (container) {
     container.textContent = String(number);
   }
-  balance = number;
+  balance = Math.truncate(number);
 }
 
 
