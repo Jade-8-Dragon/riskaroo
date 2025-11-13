@@ -47,7 +47,7 @@ async function fetchPastGameData() {
 // Add more async functions here to fetch different things, specifically with
 // const response = await fetch(BACKEND_URL + "/api/games"); and
 // const data = await response.json();
-// Just change /api/games to whatever is in the backend under @app.route("/api/games")
+// Just change /api/games to whatever is in the backit pushend under @app.route("/api/games")
 
 
 
@@ -140,20 +140,28 @@ function placeBet() {
   inputElement.value = "";
 }
 
-function getPastGames() {
-  /*
-  const prev_games = document.getElementById("game_history");
-  const lastGamesData = fetchPastGameData();
+async function getPastGames() {
+  const prev_games = document.getElementById("recent-games");
 
-  if (lastGamesData) {
-    const gameListHtml = formatGamesAsList(lastGamesData);
-    
-    if (prev_games)
-      prev_games.innerHTML = gameListHtml;
-    
+  try {
+    const lastGamesData = await fetchPastGameData(); // MUST use await
+
+    console.log("Resolved past games data:", lastGamesData);
+
+    if (Array.isArray(lastGamesData)) {
+      const gameListHtml = formatGamesAsList(lastGamesData);
+      if (prev_games) prev_games.innerHTML += gameListHtml;
+    } else {
+      if (prev_games) prev_games.innerHTML = "<p>No games data available.</p>";
+      console.error("Expected an array, got:", lastGamesData);
+    }
+
+  } catch (err) {
+    console.error("Error in getPastGames():", err);
+    if (prev_games) prev_games.innerHTML = "<p>Error loading past games.</p>";
   }
-  */
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
   
