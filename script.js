@@ -5,9 +5,31 @@ const BACKEND_URL = "https://sports-betting-backend-vkc2.onrender.com";
  * This is your reusable function.
  * @returns {Promise<Array|null>} The game data array, or null if an error occurs.
 */
-async function fetchGameData(weekNumber) {
+async function fetchGameData(weekNumber, homeTeam) {
   try {
-    const response = await fetch(BACKEND_URL + `/api/games?week=${weekNumber}`);
+    const response = await fetch(BACKEND_URL + `/api/games?week=${weekNumber}&home=${homeTeam}`);
+    
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    return data;
+    
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetches the game data from your backend.
+ * This is your reusable function.
+ * @returns {Promise<Array|null>} The game data array, or null if an error occurs.
+*/
+async function fetchPastGameData() {
+  try {
+    const response = await fetch(BACKEND_URL + `/api/games?limit=10&sort=gameDate&order=desc`);
     
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -118,6 +140,21 @@ function placeBet() {
   inputElement.value = "";
 }
 
+function getPastGames() {
+  /*
+  const prev_games = document.getElementById("game_history");
+  const lastGamesData = fetchPastGameData();
+
+  if (lastGamesData) {
+    const gameListHtml = formatGamesAsList(lastGamesData);
+    
+    if (prev_games)
+      prev_games.innerHTML = gameListHtml;
+    
+  }
+  */
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   
   // === Load the shared header ===
@@ -133,8 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
   console.log("Page loaded:", window.location.pathname);
 
-  
 
+  getPastGames();
   getBalance();
 
   const betForm = document.getElementById("bet-form");
@@ -172,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
       container.innerHTML = "";
       loadButton.disabled = true; // Disable button while loading
 
-      const allGameData = await fetchGameData(1);
+      const allGameData = await fetchGameData(7, "Colorado");
 
       if (allGameData) {
         statusElement.textContent = "Game loaded!";
